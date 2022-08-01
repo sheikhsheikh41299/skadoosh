@@ -12,11 +12,11 @@ name=DND
 
 # Manifest link. https:// is mandatory.
 # Example: https://github.com/cyanogenmod/android
-manifest=https://github.com/DarkNess-reDefined/manifest
+manifest= https://github.com/CyanogenMod/android.git
 
 # Manifest branch.
 # Example: cm-14.0
-branch=n7x
+branch= cm-12.1
 
 ### Finally, execute the stuff. ###
 /bin/bash skadoo.sh $name $manifest $branch
