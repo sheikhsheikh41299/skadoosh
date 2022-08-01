@@ -8,7 +8,7 @@
 ### Manifest Configuration ###
 # Name of the ROM. No Spaces Please.
 # Example: CyanogenMod
-name=DND
+name= CyanogenMod
 
 # Manifest link. https:// is mandatory.
 # Example: https://github.com/cyanogenmod/android
