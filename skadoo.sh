@@ -123,52 +123,7 @@ doshallow(){
 
 }
 
-dofull(){
 
-    echo -e $CL_CYN"FULL | Starting to sync."$CL_RST
-
-    cd $DIR; mkdir -p $ROMNAME/full; cd $ROMNAME/full
-
-    repo init -u $LINK -b $BRANCH -q
-
-    THREAD_COUNT_SYNC=32
-
-    # Sync it up!
-    time repo sync -c -f --force-sync -q --no-clone-bundle --no-tags -j$THREAD_COUNT_SYNC
-
-    echo -e $CL_CYN"FULL | Syncing done. Moving and compressing."$CL_RST
-
-    cd $DIR/$ROMNAME/
-
-    mkdir $ROMNAME-$BRANCH-full-$(date +%Y%m%d)
-    mv full/.repo $ROMNAME-$BRANCH-full-$(date +%Y%m%d)
-    cd $DIR/$ROMNAME/
-    mkdir fullparts
-    export XZ_OPT=-9e
-    time tar -I pxz -cf - $ROMNAME-$BRANCH-full-$(date +%Y%m%d)/ | split -b 4500M - fullparts/$ROMNAME-$BRANCH-full-$(date +%Y%m%d).tar.xz.
-
-    FULL="fullparts/$ROMNAME-$BRANCH-full-$(date +%Y%m%d).tar.xz.*"
-
-    cd $DIR/$ROMNAME/
-
-    echo -e $CL_CYN"FULL | Done."$CL_RST
-
-    echo -e $CL_CYN"FULL | Sorting"$CL_RST
-
-    sortfull
-    upload
-
-    cd $DIR/$ROMNAME
-
-    echo -e $CL_CYN"FULL | Cleaning"$CL_RST
-
-    rm -rf upload
-    rm -rf full
-    rm -rf $FULLMD5
-    rm -rf fullparts
-    rm -rf $ROMNAME-$BRANCH-full-$(date +%Y%m%d)
-
-}
 
 sortshallow(){
 
@@ -195,29 +150,7 @@ sortshallow(){
 
 }
 
-sortfull(){
 
-    echo -e $CL_PFX"Begin to sort."$CL_RST
-
-    cd $DIR/$ROMNAME
-    rm -rf upload
-    mkdir upload
-    cd upload
-    mkdir -p $ROMNAME/$BRANCH
-    cd $ROMNAME/$BRANCH
-    mkdir full
-    cd $DIR/$ROMNAME
-    mv $FULL upload/$ROMNAME/$BRANCH/full
-    echo -e $CL_PFX"Done sorting."$CL_RST
-
-    # Md5s
-
-    echo -e $CL_PFX"Taking md5sums"
-
-    cd $DIR/$ROMNAME/upload/$ROMNAME/$BRANCH/full
-    md5sum * > $ROMNAME-$BRANCH-full-$(date +%Y%m%d).parts.md5sum
-
-}
 
 upload(){
 
@@ -235,12 +168,6 @@ doallstuff(){
     # Start the counter
     checkstarttime
 
-    # Install stuff
-    installstuff
-
-    # Compress full
-    dofull
-
     # Compress shallow
     doshallow
 
@@ -256,6 +183,6 @@ if [ $? -eq 0 ]; then
     rm -rf $DIR/$ROMNAME
 else
     echo "Something failed :(";
-    rm -rf $DIR/$ROMNAME/shallow $DIR/$ROMNAME/full $DIR/$ROMNAME/shallowparts $DIR/$ROMNAME/fullparts $DIR/$ROMNAME/$SHALLOWMD5 $DIR/$ROMNAME/$FULLMD5 $DIR/$ROMNAME/upload
+    rm -rf $DIR/$ROMNAME/shallow  $DIR/$ROMNAME/shallowparts  $DIR/$ROMNAME/$SHALLOWMD5  $DIR/$ROMNAME/upload
     exit 1;
 fi
